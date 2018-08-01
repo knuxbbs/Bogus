@@ -32,21 +32,19 @@ namespace Bogus.DataSets
       /// <summary>
       /// Creates an image URL with http://lorempixel.com.
       /// </summary>
-      protected virtual string ImageUrl(string category, int width = 640, int height = 480, bool randomize = false, bool https = false)
+      protected virtual string ImageUrl(string category, int width = 320, int height = 240, bool randomize = false, bool https = false)
       {
-         var proto = "http://";
-         if( https )
+         var proto = https ? "https://" : "http://";
+
+         var url = $"{proto}loremflickr.com/{width}/{height}";
+
+         if (string.IsNullOrWhiteSpace(category)) return url;
+
+         url += $"/{category}";
+
+         if (randomize)
          {
-            proto = "https://";
-         }
-         var url = $"{proto}lorempixel.com/{width}/{height}";
-         if( !string.IsNullOrWhiteSpace(category) )
-         {
-            url += $"/{category}";
-            if( randomize )
-            {
-               url += $"/{this.Random.Number(1, 10)}";
-            }
+            url += $"/{Random.Number(1, 10)}";
          }
 
          return url;
@@ -158,6 +156,11 @@ namespace Bogus.DataSets
       public string People(int width = 640, int height = 480, bool randomize = false, bool https = false)
       {
          return ImageUrl("people", width, height, randomize, https);
+      }
+
+      public string People(Name.Gender gender, int width = 640, int height = 480, bool randomize = false, bool https = false)
+      {
+         return ImageUrl(gender == Name.Gender.Male ? "man" : "woman", width, height, randomize, https);
       }
 
       /// <summary>
